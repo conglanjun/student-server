@@ -15,5 +15,4 @@ public class MessageData {
     private String displayCreateTime;
     private User user;
     private Long userId;
-    private String imageAddress;
 }

@@ -8,6 +8,8 @@ import com.clj.student.model.po.User;
 import com.clj.student.model.vo.RoleResponse;
 import com.clj.student.model.vo.UserResponse;
 import com.clj.student.service.UserService;
+import com.clj.student.utils.Secret;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +68,20 @@ public class UserController {
 
     @PostMapping("user/update")
     public UserResponse userUpdate(@RequestBody UserData userData) {
+        UserData ud = userService.userUpdate(userData);
+        log.info("update user ud:" + ud);
+        return new UserResponse(200, "update user successfully!", ud);
+    }
+
+    @PostMapping("user/changeSecret")
+    public UserResponse changeSecret(@RequestBody UserData userData) {
+        List<User> userList = userService.userByPhone(userData);
+        if (userList.size() == 0) {
+            return new UserResponse(400, "用户不存在！", 0L);
+        }
+        User user = userList.get(0);
+        userData.setId(user.getId());
+        userData.setPassword(Secret.md5(userData.getPassword()));
         UserData ud = userService.userUpdate(userData);
         log.info("update user ud:" + ud);
         return new UserResponse(200, "update user successfully!", ud);

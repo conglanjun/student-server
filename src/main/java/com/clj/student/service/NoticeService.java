@@ -26,7 +26,7 @@ public class NoticeService {
         List<Notice> noticeList = noticeRepository.findAll();
         for (Notice n: noticeList) {
             NoticeData nd = new NoticeData();
-            if (n.getText().length() > 10) {
+            if (n.getText() != null && n.getText().length() > 10) {
                 nd.setDisplayText(n.getText().substring(0, 10) + "...");
             } else {
                 nd.setDisplayText(n.getText());

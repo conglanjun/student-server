@@ -109,7 +109,7 @@ public class ModelConvert {
         bd.setName(building.getName());
         bd.setCreateTime(building.getCreateTime());
         bd.setDescription(building.getDescription());
-        if (building.getDescription().length() > 10) {
+        if (building.getDescription() != null && building.getDescription().length() > 10) {
             bd.setDisplayDescription(building.getDescription().substring(0, 10) + "...");
         } else {
             bd.setDisplayDescription(building.getDescription());

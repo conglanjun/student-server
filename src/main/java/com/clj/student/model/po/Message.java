@@ -21,5 +21,4 @@ public class Message {
     private User user;
     @Column(insertable = false,updatable = false)
     private Long userId;
-    private String imageAddress;
 }
