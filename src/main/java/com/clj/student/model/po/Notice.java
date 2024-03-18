@@ -20,4 +20,5 @@ public class Notice implements Serializable {
     private Long id;
     private Date createTime;
     private String text;
+    private String imageAddress;
 }

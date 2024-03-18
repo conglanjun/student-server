@@ -34,5 +34,5 @@ public class User implements Serializable {
     @JoinColumn(name = "roomId")
     private Room room;
     @Column(insertable = false,updatable = false)
-    private Integer roomId;
+    private Long roomId;
 }

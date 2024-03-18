@@ -38,15 +38,29 @@ public class ToolService {
 
     private final Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public List<ServiceData> serviceList(Long creatorId, Long maintainerId) {
+    public List<ServiceData> serviceList(Long creatorId, Long maintainerId, Long dormitoryManagerId) {
         List<ServiceData> serviceDataList = new ArrayList<>();
         List<Service> serviceList = null;
-        if ((creatorId == null || creatorId == 0) && (maintainerId == null || maintainerId == 0)) {
-            serviceList = serviceRepository.findAll();
+        if ((creatorId == null || creatorId == 0) && (maintainerId == null || maintainerId == 0) && (dormitoryManagerId == null || dormitoryManagerId == 0)) {
+            serviceList = serviceRepository.findAllByOrderByCreateTimeDesc();
         } else if (creatorId != null && creatorId > 0){
-            serviceList = serviceRepository.findAllByCreatorId(creatorId);
+            serviceList = serviceRepository.findAllByCreatorIdOrderByCreateTimeDesc(creatorId);
         } else if (maintainerId != null && maintainerId > 0) {
-            serviceList = serviceRepository.findAllByMaintainerId(maintainerId);
+            serviceList = serviceRepository.findAllByMaintainerIdOrderByCreateTimeDesc(maintainerId);
+        } else if (dormitoryManagerId != null && dormitoryManagerId > 0) {
+            // query building id with user id
+            Optional<User> findUserById = userRepository.findById(dormitoryManagerId);
+            if (findUserById.isEmpty()) {
+                return null;
+            }
+            User user = findUserById.get();
+            // query room id with building id
+            List<Room> roomList = roomRepository.findAllByBuildingId(user.getRoom().getBuildingId());
+            List<Long> roomIds = new ArrayList<>();
+            for (Room r: roomList) {
+                roomIds.add(r.getId());
+            }
+            serviceList = serviceRepository.findByRoomIds(roomIds);
         }
         if (serviceList == null) {
             return null;

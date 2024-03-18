@@ -8,6 +8,8 @@ import com.clj.student.model.po.Building;
 import com.clj.student.model.po.Room;
 import com.clj.student.utils.ModelConvert;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +25,14 @@ public class BuildingService {
     private BuildingRepository buildingRepository;
     @Autowired
     private RoomRepository roomRepository;
-    public List<BuildingData> buildingList() {
+    public List<BuildingData> buildingList(String name) {
         List<BuildingData> ret = new ArrayList<>();
-        List<Building> buildingList = buildingRepository.findAll();
+        List<Building> buildingList;
+        if (Strings.isEmpty(name)) {
+            buildingList = buildingRepository.findAllByOrderByCreateTimeDesc();
+        } else {
+            buildingList = buildingRepository.findByNameOrderByCreateTimeDesc(name);
+        }
         for (int i = 0; i < buildingList.size(); i++) {
             Building building = buildingList.get(i);
             BuildingData bd = ModelConvert.BuildingConvertBuildingData(building);

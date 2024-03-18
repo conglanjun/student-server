@@ -36,6 +36,7 @@ public class NoticeService {
             nd.setCreateTime(n.getCreateTime());
             String formatCreateTime = format.format(n.getCreateTime());
             nd.setDisplayCreateTime(formatCreateTime);
+            nd.setImageAddress(n.getImageAddress());
             res.add(nd);
         }
         return res;
@@ -49,6 +50,9 @@ public class NoticeService {
             n.setCreateTime(noticeRequest.getCreateTime());
         } else {
             n.setCreateTime(Calendar.getInstance().getTime());
+        }
+        if (noticeRequest.getImageAddress() != null) {
+            n.setImageAddress(noticeRequest.getImageAddress());
         }
         return noticeRepository.save(n);
     }

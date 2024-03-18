@@ -1,6 +1,8 @@
 package com.clj.student.controller;
 
 import com.clj.student.model.dto.ConsumptionData;
+import com.clj.student.model.dto.ConsumptionRecordData;
+import com.clj.student.model.vo.ConsumptionRecordResponse;
 import com.clj.student.model.vo.ConsumptionResponse;
 import com.clj.student.service.ConsumptionService;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @Slf4j
@@ -49,4 +52,17 @@ public class ConsumptionController {
         ConsumptionData consumptionData = consumptionService.update(cd);
         return new ConsumptionResponse(200, "update consumption successfully!", consumptionData);
     }
+
+    @PostMapping("consumptionRecord/update")
+    public ConsumptionRecordResponse consumptionRecordUpdate(@RequestBody ConsumptionRecordData crd) {
+        ConsumptionRecordData ret = consumptionService.saveConsumptionRecord(crd);
+        return new ConsumptionRecordResponse(200, "successfully!", ret);
+    }
+
+    @GetMapping("consumptionRecordList")
+    public ConsumptionRecordResponse consumptionRecordDataList() {
+        List<ConsumptionRecordData> consumptionRecordDataList = consumptionService.consumptionRecordDataList();
+        return new ConsumptionRecordResponse(200, "save consumption successfully!", consumptionRecordDataList);
+    }
+    
 }

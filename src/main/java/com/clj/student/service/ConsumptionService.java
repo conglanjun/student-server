@@ -1,8 +1,13 @@
 package com.clj.student.service;
 
+import com.clj.student.dao.ConsumptionRecordRepository;
 import com.clj.student.dao.ConsumptionRepository;
+import com.clj.student.dao.UserRepository;
 import com.clj.student.model.dto.ConsumptionData;
+import com.clj.student.model.dto.ConsumptionRecordData;
 import com.clj.student.model.po.Consumption;
+import com.clj.student.model.po.ConsumptionRecord;
+import com.clj.student.model.po.User;
 import com.clj.student.utils.ModelConvert;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,12 @@ public class ConsumptionService {
 
     @Autowired
     private ConsumptionRepository consumptionRepository;
+
+    @Autowired
+    private ConsumptionRecordRepository consumptionRecordRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<ConsumptionData> consumptionDataList() {
         List<ConsumptionData> ret = new ArrayList<>();
@@ -54,5 +65,29 @@ public class ConsumptionService {
         Consumption consumption = ModelConvert.ConsumptionDataConvertConsumption(cd, c);
         Consumption saved = consumptionRepository.save(consumption);
         return ModelConvert.ConsumptionConvertConsumptionData(saved);
+    }
+
+    public ConsumptionRecordData saveConsumptionRecord(ConsumptionRecordData crd) {
+        ConsumptionRecord cr = ModelConvert.ConsumptionRecordDataConvertConsumptionRecord(crd, new ConsumptionRecord());
+        cr.setCreateTime(Calendar.getInstance().getTime());
+        Consumption c = new Consumption();
+        c.setId(cr.getConsumptionId());
+        cr.setConsumption(c);
+        User u = new User();
+        u.setId(crd.getCreatorId());
+        cr.setCreator(u);
+        ConsumptionRecord consumptionRecord = consumptionRecordRepository.save(cr);
+        return ModelConvert.ConsumptionRecordConvertConsumptionRecordData(consumptionRecord);
+    }
+
+    public List<ConsumptionRecordData> consumptionRecordDataList() {
+        List<ConsumptionRecordData> ret = new ArrayList<>();
+        List<ConsumptionRecord> consumptionRecordList = consumptionRecordRepository.findAll();
+        for (int i = 0; i < consumptionRecordList.size(); i++) {
+            ConsumptionRecord consumptionRecord = consumptionRecordList.get(i);
+            ConsumptionRecordData consumptionRecordData = ModelConvert.ConsumptionRecordConvertConsumptionRecordData(consumptionRecord);
+            ret.add(consumptionRecordData);
+        }
+        return ret;
     }
 }

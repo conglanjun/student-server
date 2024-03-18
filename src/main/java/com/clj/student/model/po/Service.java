@@ -38,7 +38,7 @@ public class Service {
     @JoinColumn(name = "roomId")
     private Room room;
     @Column(insertable = false,updatable = false)
-    private Integer roomId;
+    private Long roomId;
 
     public Service(Long id) {
         this.id = id;

@@ -11,4 +11,5 @@ public class NoticeData {
     private String displayCreateTime;
     private String text;
     private String displayText;
+    private String imageAddress;
 }

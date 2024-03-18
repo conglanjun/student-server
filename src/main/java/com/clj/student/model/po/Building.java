@@ -1,6 +1,5 @@
 package com.clj.student.model.po;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 

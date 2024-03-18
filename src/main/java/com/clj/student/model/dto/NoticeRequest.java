@@ -9,4 +9,5 @@ public class NoticeRequest {
     private Long id;
     private Date createTime;
     private String text;
+    private String imageAddress;
 }

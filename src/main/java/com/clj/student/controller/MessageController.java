@@ -1,14 +1,17 @@
 package com.clj.student.controller;
 
 import com.clj.student.model.dto.MessageData;
-import com.clj.student.model.po.Message;
 import com.clj.student.model.vo.MessageResponse;
 import com.clj.student.service.MessageService;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequestMapping("api")
 @RestController
 public class MessageController {

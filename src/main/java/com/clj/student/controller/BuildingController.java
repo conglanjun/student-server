@@ -18,8 +18,8 @@ public class BuildingController {
     private BuildingService buildingService;
 
     @GetMapping("buildingList")
-    public BuildingResponse buildingList() {
-        List<BuildingData> buildingDataList = buildingService.buildingList();
+    public BuildingResponse buildingList(@RequestParam(required = false) String name) {
+        List<BuildingData> buildingDataList = buildingService.buildingList(name);
         return new BuildingResponse(200, "list building successfully!", buildingDataList);
     }
 

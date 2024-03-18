@@ -181,4 +181,27 @@ public class ModelConvert {
         message.setUser(messageData.getUser());
         return message;
     }
+
+    public static ConsumptionRecord ConsumptionRecordDataConvertConsumptionRecord(ConsumptionRecordData crd, ConsumptionRecord consumptionRecord) {
+        ConsumptionRecord cr = new ConsumptionRecord();
+        cr.setId(crd.getId());
+        cr.setConsumptionId(crd.getConsumptionId());
+        cr.setConsumptionNumber(crd.getConsumptionNumber());
+        cr.setCreateTime(crd.getCreateTime());
+        cr.setCreatorId(crd.getCreatorId());
+        return cr;
+    }
+
+    public static ConsumptionRecordData ConsumptionRecordConvertConsumptionRecordData(ConsumptionRecord cr){
+        ConsumptionRecordData crd = new ConsumptionRecordData();
+        crd.setId(cr.getId());
+        String formatCreateTime = format.format(cr.getCreateTime());
+        crd.setDisplayCreateTime(formatCreateTime);
+        crd.setConsumptionId(cr.getConsumptionId());
+        crd.setConsumption(cr.getConsumption());
+        crd.setConsumptionNumber(cr.getConsumptionNumber());
+        crd.setCreatorId(cr.getCreatorId());
+        crd.setCreator(cr.getCreator());
+        return crd;
+    }
 }
