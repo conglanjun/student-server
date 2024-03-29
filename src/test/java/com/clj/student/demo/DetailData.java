@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.clj.student.demo;
 
 import lombok.Data;
 

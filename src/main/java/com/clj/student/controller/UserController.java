@@ -40,7 +40,7 @@ public class UserController {
             return new UserResponse(400, "电话号空，请输入电话号！", 0L);
         }
         List<User> userList = userService.userByPhone(user);
-        if (userList.size() > 0) {
+        if (!userList.isEmpty()) {
             return new UserResponse(400, "电话号已存在！", 0L);
         }
         UserServiceResult save = userService.save(user);

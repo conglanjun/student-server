@@ -63,7 +63,7 @@ public class UserService {
         User userEntity = ModelConvert.UserDataConvertUser(user);
         String secret = Secret.md5(userEntity.getPassword());
         userEntity.setPassword(secret);
-        Optional<Room> roomById = roomRepository.findById(user.getBuildingId());
+        Optional<Room> roomById = roomRepository.findById(user.getRoomId());
         roomById.ifPresent(userEntity::setRoom);
         User save = userRepository.save(userEntity);
         UserData ret = ModelConvert.UserConvertUserData(save);
@@ -129,6 +129,9 @@ public class UserService {
         if (userData.getRoomId() != null) {
             Optional<Room> roomById = roomRepository.findById(userData.getRoomId());
             roomById.ifPresent(u::setRoom);
+        } else {
+            u.setRoom(null);
+            u.setRoomId(null);
         }
         if (userData.getName() != null) {
             u.setName(userData.getName());
