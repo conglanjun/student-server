@@ -184,6 +184,44 @@ public class ModelConvert {
         return message;
     }
 
+    public static Comment CommentDataConvertComment(CommentData commentData) {
+        Comment comment = new Comment();
+        comment.setId(commentData.getId());
+        comment.setArticleId(commentData.getArticleId());
+        comment.setComment(commentData.getComment());
+        comment.setCommentUserId(commentData.getCommentUserId());
+        comment.setCommentUser(commentData.getCommentUser());
+        comment.setContent(commentData.getContent());
+        comment.setCreateTime(commentData.getCreateTime());
+        comment.setLike(commentData.getLike());
+        comment.setMessage(commentData.getMessage());
+        comment.setParentId(commentData.getParentId());
+        comment.setStatus(commentData.getStatus());
+        comment.setUpdateTime(commentData.getUpdateTime());
+        return comment;
+    }
+
+    public static CommentData CommentConvertCommentData(Comment comment) {
+        CommentData commentData = new CommentData();
+        commentData.setId(comment.getId());
+        commentData.setArticleId(comment.getArticleId());
+        commentData.setComment(comment.getComment());
+        commentData.setCommentUserId(comment.getCommentUserId());
+        commentData.setCommentUser(comment.getCommentUser());
+        commentData.setContent(comment.getContent());
+        commentData.setCreateTime(comment.getCreateTime());
+        String formatCreateTime = format.format(comment.getCreateTime());
+        commentData.setDisplayCreateTime(formatCreateTime);
+        commentData.setLike(comment.getLike());
+        commentData.setMessage(comment.getMessage());
+        commentData.setParentId(comment.getParentId());
+        commentData.setStatus(comment.getStatus());
+        String formatUpdateTime = format.format(comment.getUpdateTime());
+        commentData.setDisplayUpdateTime(formatUpdateTime);
+        commentData.setUpdateTime(comment.getUpdateTime());
+        return commentData;
+    }
+
     public static ConsumptionRecord ConsumptionRecordDataConvertConsumptionRecord(ConsumptionRecordData crd, ConsumptionRecord consumptionRecord) {
         ConsumptionRecord cr = new ConsumptionRecord();
         cr.setId(crd.getId());

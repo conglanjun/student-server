@@ -110,4 +110,26 @@ public class BuildingService {
         r.setId(id);
         roomRepository.delete(r);
     }
+
+    public BuildingData checkName(BuildingData buildingData) {
+        BuildingData ret = new BuildingData();
+        List<Building> buildings = buildingRepository.findAllByName(buildingData.getName());
+        if (buildings != null && buildings.size() > 0) {
+            ret.setNameDuplicated(true);
+        } else {
+            ret.setNameDuplicated(false);
+        }
+        return ret;
+    }
+
+    public RoomData checkRoomName(RoomData roomData) {
+        RoomData rd = new RoomData();
+        List<Room> rooms = roomRepository.findAllByNameAndBuildingId(roomData.getName(), roomData.getBuildingId());
+        if (rooms != null && rooms.size() > 0) {
+            rd.setNameDuplicated(true);
+        } else {
+            rd.setNameDuplicated(false);
+        }
+        return rd;
+    }
 }

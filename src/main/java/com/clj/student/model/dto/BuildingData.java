@@ -11,4 +11,5 @@ public class BuildingData {
     private String name;
     private String description;
     private String displayDescription;
+    private boolean nameDuplicated;
 }

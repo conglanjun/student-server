@@ -12,4 +12,6 @@ public class RoomData {
     private String name;
     private String description;
     private String displayDescription;
+    private Long buildingId;
+    private boolean nameDuplicated;
 }

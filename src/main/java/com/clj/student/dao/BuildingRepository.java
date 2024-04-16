@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BuildingRepository extends JpaRepository<Building, Long> {
     List<Building> findAllByOrderByCreateTimeDesc();
     List<Building> findByNameOrderByCreateTimeDesc(String name);
+    List<Building> findAllByName(String name);
 }

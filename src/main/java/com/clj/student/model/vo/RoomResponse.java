@@ -13,6 +13,7 @@ public class RoomResponse {
     private List<Room> roomList;
     private List<RoomData> roomDataList;
     private Room room;
+    private RoomData roomData;
 
     public RoomResponse(int code, String message, List<Room> roomList) {
         this.code = code;
@@ -35,5 +36,11 @@ public class RoomResponse {
     public RoomResponse(int code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+    public RoomResponse(int code, String message, RoomData roomData) {
+        this.code = code;
+        this.message = message;
+        this.roomData = roomData;
     }
 }

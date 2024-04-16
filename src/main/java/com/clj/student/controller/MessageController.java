@@ -1,6 +1,8 @@
 package com.clj.student.controller;
 
+import com.clj.student.model.dto.CommentData;
 import com.clj.student.model.dto.MessageData;
+import com.clj.student.model.vo.CommentResponse;
 import com.clj.student.model.vo.MessageResponse;
 import com.clj.student.service.MessageService;
 
@@ -9,7 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
 
 @Slf4j
 @RequestMapping("api")
@@ -44,6 +53,19 @@ public class MessageController {
     @DeleteMapping("message/delete/{id}")
     public MessageResponse messageDelete(@PathVariable Long id) {
         messageService.delete(id);
-        return new MessageResponse(200, "delete message successfuuly!");
+        return new MessageResponse(200, "delete message successfully!");
     }
+
+    @PostMapping("comment/save")
+    public CommentResponse commentSave(@RequestBody CommentData commentData) {
+        CommentData data = messageService.commentSave(commentData);
+        return new CommentResponse(200, "create comment successfully!", data);
+    }
+
+    @GetMapping("comment/list")
+    public CommentResponse commentList(@RequestParam Long messageId) {
+        return new CommentResponse(200, "create comment successfully!", new ArrayList<>());
+    }
+    
+    
 }

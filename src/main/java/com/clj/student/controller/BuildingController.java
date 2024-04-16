@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RequestMapping("api")
 @RestController
@@ -34,6 +37,13 @@ public class BuildingController {
         return new BuildingResponse(200, "save building successfully!", bd);
     }
 
+    @PostMapping("building/name/check")
+    public BuildingResponse checkBuildingName(@RequestBody BuildingData buildingData) {
+        BuildingData bd = buildingService.checkName(buildingData);
+        return new BuildingResponse(200, "check name successfully!", bd);
+    }
+    
+
     @DeleteMapping("building/delete/{id}")
     public BuildingResponse buildingDelete(@PathVariable Long id) {
         buildingService.delete(id);
@@ -56,6 +66,13 @@ public class BuildingController {
         }
         return new RoomResponse(200, "save room successfully!", r);
     }
+
+    @PostMapping("room/name/check")
+    public RoomResponse checkRoomName(@RequestBody RoomData roomData) {
+        RoomData rd = buildingService.checkRoomName(roomData);
+        return new RoomResponse(200, "check name successfully!", rd);
+    }
+    
 
     @DeleteMapping("room/delete/{id}")
     public RoomResponse roomDelete(@PathVariable Long id) {
