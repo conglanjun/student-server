@@ -28,6 +28,8 @@ public class ModelConvert {
         u.setName(userData.getName());
         u.setPhone(userData.getPhone());
         u.setPassword(userData.getPassword());
+        u.setRoomId(userData.getRoomId());
+        u.setRoleId(userData.getRoleId().intValue());
         return u;
     }
 

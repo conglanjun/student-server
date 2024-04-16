@@ -63,8 +63,14 @@ public class UserService {
         User userEntity = ModelConvert.UserDataConvertUser(user);
         String secret = Secret.md5(userEntity.getPassword());
         userEntity.setPassword(secret);
-        Optional<Room> roomById = roomRepository.findById(user.getRoomId());
-        roomById.ifPresent(userEntity::setRoom);
+        if (user.getRoomId() != null && user.getRoomId() > 0) {
+            Optional<Room> roomById = roomRepository.findById(user.getRoomId());
+            roomById.ifPresent(userEntity::setRoom);
+        }
+        if (user.getRoleId() != null && user.getRoleId() > 0) {
+            Optional<Role> roleById = roleRepository.findById(user.getRoleId());
+            roleById.ifPresent(userEntity::setRole);
+        }
         User save = userRepository.save(userEntity);
         UserData ret = ModelConvert.UserConvertUserData(save);
         if (ret.getRoom() == null) {
