@@ -202,4 +202,44 @@ public class ToolService {
     public void delete(Long id) {
         serviceRepository.delete(new Service(id));
     }
+
+    public List<ServiceData> serviceListByDispatchStatus(String dispatchStatus) {
+        List<ServiceData> serviceDataList = new ArrayList<>();
+        List<String> statusList = new ArrayList<>();
+        if (dispatchStatus == null || dispatchStatus.isEmpty()) {
+            return serviceDataList;
+        }
+        if (dispatchStatus.equals("PENDINGDISPATCH")) {
+            statusList.add("SUBMITTED");
+        } else if (dispatchStatus.equals("DISPATCHED")) {
+            statusList.add("PENDINGORDER");
+            statusList.add("RECEIVEDORDER");
+            statusList.add("REJECTORDER");
+            statusList.add("HANDLING");
+            statusList.add("DONE");
+            statusList.add("FINISHED");
+        }
+        List<Service> serviceList = serviceRepository.findAllByDispatchStatus(statusList);
+        if (serviceList == null) {
+            return null;
+        }
+        StringBuffer dt = new StringBuffer();
+        for (int i = 0; i < serviceList.size(); i++) {
+            Service s = serviceList.get(i);
+            dt.append("标题：").append(s.getTitle());
+            if (!s.getStatus().isEmpty()) {
+                ServiceStatus serviceStatus = ServiceStatus.valueOfStatus(s.getStatus());
+                dt.append("  状态：").append(serviceStatus.getDisplayStatus());
+                if (serviceStatus.getStatus().equals(ServiceStatus.HANDLING.getStatus()) || serviceStatus.getStatus().equals(ServiceStatus.DONE.getStatus()) || serviceStatus.getStatus().equals(ServiceStatus.FINISHED.getStatus())) {
+                    if (s.getMaintainer() != null && !s.getMaintainer().getName().isEmpty()) {
+                        dt.append("  维修者：").append(s.getMaintainer().getName());
+                    }
+                }
+            }
+            ServiceData sd = ModelConvert.ServiceConvertServiceData(s, dt.toString());
+            serviceDataList.add(sd);
+            dt.setLength(0);
+        }
+        return serviceDataList;
+    }
 }

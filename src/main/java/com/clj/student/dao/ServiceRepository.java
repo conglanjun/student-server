@@ -24,5 +24,8 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
 
     @Query(nativeQuery = true, value = "select * from service s where s.status=:status and s.room_id in (:roomIds) order by create_time desc")
     List<Service> findByRoomIdsAndStatus(@Param(value = "roomIds") List<Long> roomIds, String status);
+    
+    @Query(nativeQuery = true, value = "select * from service s where s.status in (:dispatchStatus) order by create_time desc")
+    List<Service> findAllByDispatchStatus(@Param(value = "dispatchStatus") List<String> dispatchStatus);
 
 }
