@@ -23,4 +23,8 @@ public class CommentData {
     private String displayCreateTime;
     private Date updateTime;
     private String displayUpdateTime;
+    private String nickName;
+    private boolean owner;
+    private boolean hasLike;
+    private Integer likeNum;
 }

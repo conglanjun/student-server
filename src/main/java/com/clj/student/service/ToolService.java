@@ -38,15 +38,27 @@ public class ToolService {
 
     private final Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public List<ServiceData> serviceList(Long creatorId, Long maintainerId, Long dormitoryManagerId) {
+    public List<ServiceData> serviceList(Long creatorId, Long maintainerId, Long dormitoryManagerId, String status) {
         List<ServiceData> serviceDataList = new ArrayList<>();
         List<Service> serviceList = null;
         if ((creatorId == null || creatorId == 0) && (maintainerId == null || maintainerId == 0) && (dormitoryManagerId == null || dormitoryManagerId == 0)) {
-            serviceList = serviceRepository.findAllByOrderByCreateTimeDesc();
+            if (status == null || status.isEmpty()) {
+                serviceList = serviceRepository.findAllByOrderByCreateTimeDesc();
+            } else {
+                serviceList = serviceRepository.findAllByStatusOrderByCreateTimeDesc(status);
+            }
         } else if (creatorId != null && creatorId > 0){
-            serviceList = serviceRepository.findAllByCreatorIdOrderByCreateTimeDesc(creatorId);
+            if (status == null || status.isEmpty()) {
+                serviceList = serviceRepository.findAllByCreatorIdOrderByCreateTimeDesc(creatorId);
+            } else {
+                serviceList = serviceRepository.findAllByCreatorIdAndStatusOrderByCreateTimeDesc(creatorId, status);
+            }
         } else if (maintainerId != null && maintainerId > 0) {
-            serviceList = serviceRepository.findAllByMaintainerIdOrderByCreateTimeDesc(maintainerId);
+            if (status == null || status.isEmpty()) {
+                serviceList = serviceRepository.findAllByMaintainerIdOrderByCreateTimeDesc(maintainerId);
+            } else {
+                serviceList = serviceRepository.findAllByMaintainerIdAndStatusOrderByCreateTimeDesc(maintainerId, status);
+            }
         } else if (dormitoryManagerId != null && dormitoryManagerId > 0) {
             // query building id with user id
             Optional<User> findUserById = userRepository.findById(dormitoryManagerId);
@@ -60,7 +72,11 @@ public class ToolService {
             for (Room r: roomList) {
                 roomIds.add(r.getId());
             }
-            serviceList = serviceRepository.findByRoomIds(roomIds);
+            if (status == null || status.isEmpty()) {
+                serviceList = serviceRepository.findByRoomIds(roomIds);
+            } else {
+                serviceList = serviceRepository.findByRoomIdsAndStatus(roomIds, status);
+            }
         }
         if (serviceList == null) {
             return null;

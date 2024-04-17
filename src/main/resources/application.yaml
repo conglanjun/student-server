@@ -16,6 +16,9 @@ spring:
       schema-locations: classpath:init.sql
       mode: always
       continue-on-error: true
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
 #  data:
 #    redis:
 ##      host: 127.0.0.1

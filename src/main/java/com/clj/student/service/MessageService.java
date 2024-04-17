@@ -10,9 +10,15 @@ import com.clj.student.model.po.Message;
 import com.clj.student.model.po.User;
 import com.clj.student.utils.ModelConvert;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -93,4 +99,68 @@ public class MessageService {
         Comment save = commentRepository.save(comment);
         return ModelConvert.CommentConvertCommentData(save);
     }
+
+    public List<CommentData> commentList(Long messageId, Long userId) {
+        List<CommentData> ret = new ArrayList<>();
+        List<Comment> commentList = commentRepository.findAllByArticleId(String.valueOf(messageId));
+        for (Comment c: commentList) {
+            CommentData cd = ModelConvert.CommentConvertCommentData(c);
+            ret.add(cd);
+        }
+        for (CommentData cd: ret) {
+            if (cd.getCommentUser() != null) {
+                cd.setNickName(cd.getCommentUser().getName());
+            }
+            if (userId == cd.getCommentUserId()) {
+                cd.setOwner(true);
+            }
+            if (cd.getLike() != null) {
+                JSONParser parser = new JSONParser(cd.getLike());
+                try {
+					ArrayList<BigInteger> likeArray = (ArrayList<BigInteger>) parser.parse();
+                    log.info(likeArray.toString());
+                    cd.setLikeNum(likeArray.size());
+                    for (BigInteger like: likeArray) {
+                        if (like.intValue() == userId.intValue()) {
+                            cd.setHasLike(true);
+                        }
+                    }
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+            }
+
+        }
+        return ret;
+    }
+
+	public void commentDelete(Long id) {
+        commentRepository.deleteById(id);
+	}
+
+	public void commentLike(Long commentId, Long userId) {
+        Optional<Comment> commentById = commentRepository.findById(commentId);
+        if (commentById.isEmpty()) {
+            return;
+        }
+        Comment comment = commentById.get();
+        JSONParser parser = new JSONParser(comment.getLike());
+        try {
+            ArrayList<BigInteger> likeArray = (ArrayList<BigInteger>) parser.parse();
+            log.info(likeArray.toString());
+            if (likeArray.contains(new BigInteger(userId.toString()))) {
+                likeArray.remove(new BigInteger(userId.toString()));
+            } else {
+                likeArray.add(new BigInteger(userId.toString()));
+            }
+
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.addAll(likeArray);
+            String newlikeArray = jsonArray.toJSONString();
+            comment.setLike(newlikeArray);
+            commentRepository.save(comment);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+	}
 }

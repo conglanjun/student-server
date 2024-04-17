@@ -5,8 +5,11 @@ import java.util.Map;
 
 public enum ServiceStatus {
     SUBMITTED("SUBMITTED", "已提交"),
-    HANDLING("HANDLING", "处理中"),
-    DONE("DONE", "维修完成"),
+    PENDINGORDER("PENDINGORDER", "待接单"),
+    RECEIVEDORDER("RECEIVEDORDER", "已接单"),
+    REJECTORDER("REJECTORDER", "拒绝接单"),
+    HANDLING("HANDLING", "维修中"),
+    DONE("DONE", "已完成"),
     FINISHED("FINISHED", "评价完");
 
     private static final Map<String, ServiceStatus> BY_STATUS = new HashMap<>();

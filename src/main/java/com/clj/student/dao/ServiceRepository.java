@@ -11,10 +11,18 @@ import java.util.List;
 
 public interface ServiceRepository extends JpaRepository<Service, Long> {
     List<Service> findAllByCreatorIdOrderByCreateTimeDesc(Long creatorId);
-    List<Service> findAllByMaintainerIdOrderByCreateTimeDesc(Long maintainerId);
+    List<Service> findAllByCreatorIdAndStatusOrderByCreateTimeDesc(Long creatorId, String status);
 
+    List<Service> findAllByMaintainerIdOrderByCreateTimeDesc(Long maintainerId);
+    List<Service> findAllByMaintainerIdAndStatusOrderByCreateTimeDesc(Long maintainerId, String status);
+    
     List<Service> findAllByOrderByCreateTimeDesc();
+    List<Service> findAllByStatusOrderByCreateTimeDesc(String status);
 
     @Query(nativeQuery = true, value = "select * from service s where s.room_id in (:roomIds) order by create_time desc")
     List<Service> findByRoomIds(@Param(value = "roomIds") List<Long> roomIds);
+
+    @Query(nativeQuery = true, value = "select * from service s where s.status=:status and s.room_id in (:roomIds) order by create_time desc")
+    List<Service> findByRoomIdsAndStatus(@Param(value = "roomIds") List<Long> roomIds, String status);
+
 }

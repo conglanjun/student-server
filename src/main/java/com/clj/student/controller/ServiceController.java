@@ -20,8 +20,8 @@ public class ServiceController {
     private ToolService toolService;
 
     @GetMapping("serviceList")
-    public ServiceResponse serviceList(@RequestParam(required = false) Long creatorId, @RequestParam(required = false) Long maintainerId, @RequestParam(required = false) Long dormitoryManagerId) {
-        List<ServiceData> serviceDataList = toolService.serviceList(creatorId, maintainerId, dormitoryManagerId);
+    public ServiceResponse serviceList(@RequestParam(required = false) Long creatorId, @RequestParam(required = false) Long maintainerId, @RequestParam(required = false) Long dormitoryManagerId, @RequestParam(required = false) String status) {
+        List<ServiceData> serviceDataList = toolService.serviceList(creatorId, maintainerId, dormitoryManagerId, status);
         return new ServiceResponse(serviceDataList, 200, "service list successfully!");
     }
 

@@ -2,6 +2,8 @@ package com.clj.student.controller;
 
 import com.clj.student.model.dto.CommentData;
 import com.clj.student.model.dto.MessageData;
+import com.clj.student.model.po.Comment;
+import com.clj.student.model.vo.BuildingResponse;
 import com.clj.student.model.vo.CommentResponse;
 import com.clj.student.model.vo.MessageResponse;
 import com.clj.student.service.MessageService;
@@ -13,10 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -63,9 +61,22 @@ public class MessageController {
     }
 
     @GetMapping("comment/list")
-    public CommentResponse commentList(@RequestParam Long messageId) {
-        return new CommentResponse(200, "create comment successfully!", new ArrayList<>());
+    public CommentResponse commentList(@RequestParam Long messageId, Long userId) {
+        List<CommentData> commentDataList = messageService.commentList(messageId, userId);
+        return new CommentResponse(200, "create comment successfully!", commentDataList);
+    }
+
+    @DeleteMapping("comment/delete/{id}")
+    public CommentResponse commentDelete(@PathVariable Long id) {
+        messageService.commentDelete(id);
+        return new CommentResponse(200, "delete comment successfully!");
     }
     
+    @GetMapping("comment/like")
+    public CommentResponse commentLike(@RequestParam Long commentId, Long userId) {
+        messageService.commentLike(commentId, userId);
+        return new CommentResponse(200, "like comment successfully!");
+    }
+
     
 }
