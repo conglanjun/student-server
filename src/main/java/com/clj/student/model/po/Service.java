@@ -39,6 +39,9 @@ public class Service {
     private Room room;
     @Column(insertable = false,updatable = false)
     private Long roomId;
+    private String rejectDetail;
+    @Column(insertable = false,updatable = false)
+    private Long typeId;
 
     public Service(Long id) {
         this.id = id;

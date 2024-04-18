@@ -1,5 +1,6 @@
 package com.clj.student.controller;
 
+import com.clj.student.model.dto.ServiceCombination;
 import com.clj.student.model.dto.ServiceData;
 import com.clj.student.model.dto.ServiceRequest;
 import com.clj.student.model.dto.ServiceTypeRequest;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("api")
@@ -20,12 +23,18 @@ public class ServiceController {
     private ToolService toolService;
 
     @GetMapping("serviceList")
-    public ServiceResponse serviceList(@RequestParam(required = false) Long creatorId, @RequestParam(required = false) Long maintainerId, @RequestParam(required = false) Long dormitoryManagerId, @RequestParam(required = false) String status, @RequestParam(required = false) String dispatchStatus) {
+    public ServiceResponse serviceList(@RequestParam(required = false) Long creatorId, @RequestParam(required = false) Long maintainerId, @RequestParam(required = false) Long dormitoryManagerId, @RequestParam(required = false) String status, @RequestParam(required = false) String dispatchStatus, @RequestParam(required = false) String finishedStatus, @RequestParam(required = false) String commentStatus, @RequestParam(required = false) Long serviceTypeId, @RequestParam(required = false) String fixStatus) {
         List<ServiceData> serviceDataList;
         if (dispatchStatus != null && !dispatchStatus.isEmpty()) {
             serviceDataList = toolService.serviceListByDispatchStatus(dispatchStatus);
+        } else if (finishedStatus != null && !finishedStatus.isEmpty()) {
+            serviceDataList = toolService.serviceListByFinishedStatus(maintainerId, finishedStatus, null);
+        } else if (commentStatus != null && !commentStatus.isEmpty()) {
+            serviceDataList = toolService.serviceListByFinishedStatus(maintainerId, null, commentStatus);
+        } else if (serviceTypeId != null && serviceTypeId != 0) {
+            serviceDataList = toolService.serviceListByServiceType(maintainerId, serviceTypeId);
         } else {
-            serviceDataList = toolService.serviceList(creatorId, maintainerId, dormitoryManagerId, status);
+            serviceDataList = toolService.serviceList(creatorId, maintainerId, dormitoryManagerId, status, fixStatus);
         }
         return new ServiceResponse(serviceDataList, 200, "service list successfully!");
     }
@@ -77,4 +86,11 @@ public class ServiceController {
         ServiceType st = toolService.updateService(serviceType);
         return new ServiceResponse(200, "update service type successfully!", st);
     }
+
+    @GetMapping("service/orderStatistics")
+    public ServiceResponse orderStatistics(@RequestParam(required = false) Long maintainerId) {
+       ServiceCombination serviceCombination = toolService.orderStatisticsByServiceType(maintainerId);
+        return new ServiceResponse(200, "order statistics!", serviceCombination);
+    }
+    
 }

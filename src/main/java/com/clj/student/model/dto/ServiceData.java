@@ -25,4 +25,5 @@ public class ServiceData {
     private String displayCreateTime;
     private Room room;
     private String displayRoomInfo;
+    private String rejectDetail;
 }

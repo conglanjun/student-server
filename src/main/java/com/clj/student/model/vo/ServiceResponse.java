@@ -1,6 +1,7 @@
 package com.clj.student.model.vo;
 
 import com.clj.student.model.po.ServiceType;
+import com.clj.student.model.dto.ServiceCombination;
 import com.clj.student.model.dto.ServiceData;
 import com.clj.student.model.po.Service;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class ServiceResponse {
     private List<ServiceData> serviceDataList;
     private Service service;
     private ServiceData serviceData;
+    private ServiceCombination serviceCombination;
 
     private ServiceType serviceType;
     private List<ServiceType> serviceTypeList;
@@ -59,5 +61,12 @@ public class ServiceResponse {
         this.message = message;
         this.serviceTypeList = serviceTypeList;
     }
+
+    public ServiceResponse(int code, String message, ServiceCombination serviceCombination) {
+        this.code = code;
+        this.message = message;
+        this.serviceCombination = serviceCombination;
+    }
+    
 
 }

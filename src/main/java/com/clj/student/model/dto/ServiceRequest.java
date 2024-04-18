@@ -16,5 +16,6 @@ public class ServiceRequest {
     private String comment;
     private Long typeId;
     private Long roomId;
+    private String rejectDetail;
 
 }

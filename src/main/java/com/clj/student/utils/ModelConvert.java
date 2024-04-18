@@ -76,6 +76,7 @@ public class ModelConvert {
         sd.setRate(s.getRate());
         sd.setComment(s.getComment());
         sd.setServiceType(s.getServiceType());
+        sd.setRejectDetail(s.getRejectDetail());
         sd.setRoom(s.getRoom());
         if (s.getRoom() == null) {
             sd.setDisplayRoomInfo("无");

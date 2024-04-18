@@ -24,8 +24,19 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
 
     @Query(nativeQuery = true, value = "select * from service s where s.status=:status and s.room_id in (:roomIds) order by create_time desc")
     List<Service> findByRoomIdsAndStatus(@Param(value = "roomIds") List<Long> roomIds, String status);
+
+    @Query(nativeQuery = true, value = "select * from service s where s.room_id in (:roomIds) and s.status in (:statusList) order by create_time desc")
+    List<Service> findByRoomIdsAndStatusList(@Param(value = "roomIds") List<Long> roomIds, @Param(value = "statusList") List<String> statusList);
     
     @Query(nativeQuery = true, value = "select * from service s where s.status in (:dispatchStatus) order by create_time desc")
     List<Service> findAllByDispatchStatus(@Param(value = "dispatchStatus") List<String> dispatchStatus);
 
+    @Query(nativeQuery = true, value = "select * from service s where maintainer_id = :maintainerId and s.status in (:finishedStatus) order by create_time desc")
+    List<Service> findAllByMaintainerIdAndFinishedStatus(@Param(value = "maintainerId") Long maintainerId, @Param(value = "finishedStatus") List<String> finishedStatus);
+
+    @Query(nativeQuery = true, value = "select * from service s where s.status in (:finishedStatus) order by create_time desc")
+    List<Service> findAllByFinishedStatus(@Param(value = "finishedStatus") List<String> finishedStatus);
+
+    List<Service> findAllByMaintainerIdAndTypeIdOrderByCreateTimeDesc(Long maintainerId, Long serviceTypeId);
+    
 }
