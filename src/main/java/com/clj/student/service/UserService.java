@@ -113,6 +113,11 @@ public class UserService {
             } else {
                 ud.setDisplayRoomInfo(user.getRoom().getBuilding().getName() + "楼 " + user.getRoom().getName());
             }
+            if (user.getRole() == null) {
+                ud.setDisplayRoomInfo("无");
+            } else {
+                ud.setDisplayRoleInfo(user.getRole().getDisplayName());
+            }
             ret.add(ud);
         }
         return ret;

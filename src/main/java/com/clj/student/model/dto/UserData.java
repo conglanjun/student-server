@@ -22,4 +22,5 @@ public class UserData {
     private Room room;
     private Long roomId;
     private String displayRoomInfo;
+    private String displayRoleInfo;
 }
