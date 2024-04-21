@@ -147,7 +147,7 @@ public class ModelConvert {
         rd.setId(r.getId());
         rd.setName(r.getName());
         rd.setDescription(r.getDescription());
-        if (r.getDescription().length() > 10) {
+        if (r.getDescription() != null && r.getDescription().length() > 10) {
             rd.setDisplayDescription(r.getDescription().substring(0, 10) + "...");
         } else {
             rd.setDisplayDescription(r.getDescription());

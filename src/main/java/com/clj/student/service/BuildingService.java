@@ -1,8 +1,11 @@
 package com.clj.student.service;
 
+import com.alibaba.excel.EasyExcel;
 import com.clj.student.dao.BuildingRepository;
 import com.clj.student.dao.RoomRepository;
 import com.clj.student.model.dto.BuildingData;
+import com.clj.student.model.dto.BuildingRoomData;
+import com.clj.student.model.dto.BuildingRoomListener;
 import com.clj.student.model.dto.RoomData;
 import com.clj.student.model.po.Building;
 import com.clj.student.model.po.Room;
@@ -13,6 +16,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -131,5 +135,9 @@ public class BuildingService {
             rd.setNameDuplicated(false);
         }
         return rd;
+    }
+
+    public void importDataFromFileUpload(InputStream is) {
+        EasyExcel.read(is, BuildingRoomData.class, new BuildingRoomListener(buildingRepository, roomRepository)).sheet().doRead();
     }
 }

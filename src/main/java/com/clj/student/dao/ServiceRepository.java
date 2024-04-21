@@ -13,6 +13,9 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
     List<Service> findAllByCreatorIdOrderByCreateTimeDesc(Long creatorId);
     List<Service> findAllByCreatorIdAndStatusOrderByCreateTimeDesc(Long creatorId, String status);
 
+    @Query(nativeQuery = true, value = "select * from service s where s.creator_id = :creatorId and s.status in (:statusList) order by create_time desc")
+    List<Service> findAllByCreatorIdAndStatusListOrderByCreateTimeDesc(@Param(value = "creatorId") Long creatorId, @Param(value = "statusList") List<String> statusList);
+
     List<Service> findAllByMaintainerIdOrderByCreateTimeDesc(Long maintainerId);
     List<Service> findAllByMaintainerIdAndStatusOrderByCreateTimeDesc(Long maintainerId, String status);
     

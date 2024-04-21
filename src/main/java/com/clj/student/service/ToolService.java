@@ -51,8 +51,23 @@ public class ToolService {
                 serviceList = serviceRepository.findAllByStatusOrderByCreateTimeDesc(status);
             }
         } else if (creatorId != null && creatorId > 0){
-            if (status == null || status.isEmpty()) {
+            if ((status == null || status.isEmpty()) && (fixStatus == null || fixStatus.isEmpty())) {
                 serviceList = serviceRepository.findAllByCreatorIdOrderByCreateTimeDesc(creatorId);
+            } else if (fixStatus != null && !fixStatus.isEmpty()) {
+                List<String> statusList = new ArrayList<>();
+                if (fixStatus.equals("NOTFIX")) {
+                    statusList.add("SUBMITTED");
+                    statusList.add("PENDINGORDER");
+                    statusList.add("RECEIVEDORDER");
+                    statusList.add("REJECTORDER");
+                } else if (fixStatus.equals("FIXED")) {
+                    statusList.add("HANDLING");
+                    statusList.add("DONE");
+                    statusList.add("FINISHED");
+                }
+                if (!statusList.isEmpty()) {
+                    serviceList = serviceRepository.findAllByCreatorIdAndStatusListOrderByCreateTimeDesc(creatorId, statusList);
+                }
             } else {
                 serviceList = serviceRepository.findAllByCreatorIdAndStatusOrderByCreateTimeDesc(creatorId, status);
             }
