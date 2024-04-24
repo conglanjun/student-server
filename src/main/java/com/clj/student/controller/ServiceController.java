@@ -4,6 +4,7 @@ import com.clj.student.model.dto.ServiceCombination;
 import com.clj.student.model.dto.ServiceData;
 import com.clj.student.model.dto.ServiceRequest;
 import com.clj.student.model.dto.ServiceTypeRequest;
+import com.clj.student.model.dto.ServiceTypeStatisticsData;
 import com.clj.student.model.po.Service;
 import com.clj.student.model.po.ServiceType;
 import com.clj.student.model.vo.ServiceResponse;
@@ -89,8 +90,14 @@ public class ServiceController {
 
     @GetMapping("service/orderStatistics")
     public ServiceResponse orderStatistics(@RequestParam(required = false) Long maintainerId) {
-       ServiceCombination serviceCombination = toolService.orderStatisticsByServiceType(maintainerId);
+        ServiceCombination serviceCombination = toolService.orderStatisticsByServiceType(maintainerId);
         return new ServiceResponse(200, "order statistics!", serviceCombination);
+    }
+
+    @GetMapping("service/typeStatistics")
+    public ServiceResponse typeStatistics() {
+        ServiceTypeStatisticsData serviceTypeStatisticsData = toolService.typeStatistics();
+        return new ServiceResponse(200, "service type statistics!", serviceTypeStatisticsData);
     }
     
 }

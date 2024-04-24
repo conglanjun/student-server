@@ -41,5 +41,8 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
     List<Service> findAllByFinishedStatus(@Param(value = "finishedStatus") List<String> finishedStatus);
 
     List<Service> findAllByMaintainerIdAndTypeIdOrderByCreateTimeDesc(Long maintainerId, Long serviceTypeId);
-    
+        
+    @Query(nativeQuery = true, value = "select * from service s where s.status in (:doneStatus) and s.type_id = :typeId order by create_time desc")
+    List<Service> findAllByDoneStatusAndType(@Param(value = "doneStatus") List<String> doneStatus, @Param(value = "typeId") Long typeId);
+
 }

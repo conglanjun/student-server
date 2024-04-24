@@ -8,6 +8,8 @@ import com.clj.student.model.dto.ServiceCombination;
 import com.clj.student.model.dto.ServiceData;
 import com.clj.student.model.dto.ServiceRequest;
 import com.clj.student.model.dto.ServiceTypeRequest;
+import com.clj.student.model.dto.ServiceTypeStatistics;
+import com.clj.student.model.dto.ServiceTypeStatisticsData;
 import com.clj.student.model.po.Room;
 import com.clj.student.model.po.Service;
 import com.clj.student.model.po.ServiceType;
@@ -385,5 +387,22 @@ public class ToolService {
             dt.setLength(0);
         }
         return serviceDataList;
+    }
+
+    public ServiceTypeStatisticsData typeStatistics() {
+        ServiceTypeStatisticsData ret = new ServiceTypeStatisticsData();
+        ret.setData(new ArrayList<>());
+        List<ServiceType> serviceTypes = serviceTypeRepository.findAll();
+        List<String> statusList = new ArrayList<>();
+        statusList.add("DONE");
+        statusList.add("FINISHED");
+        for (ServiceType st: serviceTypes) {
+            ServiceTypeStatistics sts = new ServiceTypeStatistics();
+            List<Service> serviceList = serviceRepository.findAllByDoneStatusAndType(statusList, st.getId());
+            sts.setName(st.getName());
+            sts.setValue(serviceList.size());
+            ret.getData().add(sts);
+        }
+        return ret;
     }
 }

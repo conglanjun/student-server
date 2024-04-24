@@ -3,6 +3,7 @@ package com.clj.student.model.vo;
 import com.clj.student.model.po.ServiceType;
 import com.clj.student.model.dto.ServiceCombination;
 import com.clj.student.model.dto.ServiceData;
+import com.clj.student.model.dto.ServiceTypeStatisticsData;
 import com.clj.student.model.po.Service;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class ServiceResponse {
     private Service service;
     private ServiceData serviceData;
     private ServiceCombination serviceCombination;
+    private ServiceTypeStatisticsData serviceTypeStatisticsData;
 
     private ServiceType serviceType;
     private List<ServiceType> serviceTypeList;
@@ -66,6 +68,12 @@ public class ServiceResponse {
         this.code = code;
         this.message = message;
         this.serviceCombination = serviceCombination;
+    }
+
+    public ServiceResponse(int code, String message, ServiceTypeStatisticsData serviceTypeStatisticsData) {
+        this.code = code;
+        this.message = message;
+        this.serviceTypeStatisticsData = serviceTypeStatisticsData;
     }
     
 
