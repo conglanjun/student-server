@@ -20,10 +20,10 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
     @Override
     public void render(XWPFTable table, Object o) throws Exception {
         DetailData detailTable = (DetailData)o;
-        List<DataBase> dataBaseList = detailTable.getDataBaseList();
+        List<DataBaseV2> dataBaseList = detailTable.getDataBaseList();
         if (dataBaseList != null) {
             for (int i = dataBaseList.size() - 1; i >= 0; i--) {
-                DataBase dataBase = dataBaseList.get(i);
+                DataBaseV2 dataBase = dataBaseList.get(i);
                 List<String> params = new ArrayList<>();
                 XWPFTableRow insertNewTableRow = table.insertNewTableRow(tableDataRows);
                 for (int j = 0; j < tableColumnCount; j++) {
@@ -32,19 +32,19 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 // parent project; project; mini project
                 if (dataBase.getProjectParent().equals(dataBase.getProject())) {
                     params.add(dataBase.getProject());
-                    if (dataBase.getMiniProject() == null || dataBase.getMiniProject().isEmpty()) {
+                    if (dataBase.getMinProject() == null || dataBase.getMinProject().isEmpty()) {
                         TableTools.mergeCellsHorizonal(table, tableDataRows, 0, 2);
                     } else {
                         TableTools.mergeCellsHorizonal(table, tableDataRows, 0, 1);
-                        params.add(dataBase.getMiniProject());
+                        params.add(dataBase.getMinProject());
                     }
                 } else {
                     params.add(dataBase.getProjectParent());
                     params.add(dataBase.getProject());
-                    if (dataBase.getMiniProject() == null || dataBase.getMiniProject().isEmpty()) {
+                    if (dataBase.getMinProject() == null || dataBase.getMinProject().isEmpty()) {
                         TableTools.mergeCellsHorizonal(table, tableDataRows, 1, 2);
                     } else {
-                        params.add(dataBase.getMiniProject());
+                        params.add(dataBase.getMinProject());
                     }
                 }
                 // single
@@ -54,10 +54,10 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 } else {
                     singleResult += dataBase.getSingleItemScore();
                 }
-                if (dataBase.getSingleItemRemark() == null || dataBase.getSingleItemRemark().isEmpty()) {
+                if (dataBase.getSingleItemRanking() == null || dataBase.getSingleItemRanking().isEmpty()) {
                     singleResult += "\n/";
                 } else {
-                    singleResult += "\n" + dataBase.getSingleItemRemark();
+                    singleResult += "\n" + dataBase.getSingleItemRanking();
                 }
                 params.add(singleResult);
 
@@ -68,10 +68,10 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 } else {
                     comprehensiveResult += dataBase.getComprehensiveScore();
                 }
-                if (dataBase.getComprehensiveRemark() == null || dataBase.getComprehensiveRemark().isEmpty()) {
+                if (dataBase.getComprehensiveRanking() == null || dataBase.getComprehensiveRanking().isEmpty()) {
                     comprehensiveResult += "\n/";
                 } else {
-                    comprehensiveResult += "\n" + dataBase.getComprehensiveRemark();
+                    comprehensiveResult += "\n" + dataBase.getComprehensiveRanking();
                 }
                 params.add(comprehensiveResult);
                 RowRenderData rowRenderData = Rows.of(params.toArray(new String[0])).create();

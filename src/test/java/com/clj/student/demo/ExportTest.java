@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
+
+@SpringBootTest(classes = ExportTest.class)
 public class ExportTest {
 
     DocumentData documentData = new DocumentData();
@@ -113,7 +114,7 @@ public class ExportTest {
 
         documentData.setDocument("2023年11月份全市创建全国文明城市工作暨城市综合管理考评情况");
         DetailData dd = new DetailData();
-        dd.setDataBaseList(dataBaseList);
+        // dd.setDataBaseList(dataBaseList);
         documentData.setDetailTable(dd);
 
     }
