@@ -47,6 +47,13 @@ public class UserController {
         return new UserResponse(200, "save user successfully!", save.getUser());
     }
 
+    @DeleteMapping("user/delete/{id}")
+    public UserResponse userDelete(@PathVariable Long id) {
+        userService.delete(id);
+        return new UserResponse(200, "delete user successfully!");
+    }
+    
+
     @PostMapping("login")
     public UserResponse login(@RequestBody UserData user) {
         log.info("login user:" + user);
@@ -55,8 +62,8 @@ public class UserController {
     }
 
     @GetMapping("userList")
-    public UserResponse userList(@RequestParam(required = false) Long roleId) {
-        List<UserData> userList = userService.userList(roleId);
+    public UserResponse userList(@RequestParam(required = false) Long roleId, @RequestParam(required = false) String name) {
+        List<UserData> userList = userService.userList(roleId, name);
         return new UserResponse(200, userList, "user list successfully!");
     }
 

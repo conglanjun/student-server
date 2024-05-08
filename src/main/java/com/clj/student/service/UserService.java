@@ -94,13 +94,18 @@ public class UserService {
         return roleRepository.findAll();
     }
 
-    public List<UserData> userList(Long roleId) {
+    public List<UserData> userList(Long roleId, String name) {
         List<UserData> ret = new ArrayList<>();
-        List<User> userList;
-        if (roleId == null || roleId == 0) {
+        List<User> userList = null;
+        if ((roleId == null || roleId == 0) && (name == null || name.isEmpty())) {
             userList = userRepository.findAll();
-        } else {
+        } else if (roleId != null && roleId > 0)  {
             userList = userRepository.findAllByRoleId(roleId);
+        } else if (name != null && !name.isEmpty()) {
+            userList = userRepository.findByNameContaining(name);
+        }
+        if (userList == null) {
+            return ret;
         }
         for (User user : userList) {
             UserData ud = ModelConvert.UserConvertUserData(user);
@@ -168,6 +173,12 @@ public class UserService {
             ret.setDisplayRoomInfo(ret.getRoom().getBuilding().getName() + "楼 " + ret.getRoom().getName());
         }
         return ret;
+    }
+
+    public void delete(Long id) {
+        User u = new User();
+        u.setId(id);
+        userRepository.delete(u);
     }
 }
 

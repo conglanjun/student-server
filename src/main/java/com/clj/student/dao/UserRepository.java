@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int updateUserRole(@Param(value = "id") long id, @Param(value = "roleId") int roleId);
 
     List<User> findAllByRoleId(Long roleId);
+
+    List<User> findByNameContaining(String name);
 }

@@ -20,6 +20,11 @@ public class UserResponse {
     private UserData userData;
     private UserServiceResult userServiceResult;
 
+    public UserResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public UserResponse(int code, String message, Long id) {
         this.code = code;
         this.message = message;
