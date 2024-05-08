@@ -10,4 +10,5 @@ public class DetailData {
 //    List<RowRenderData> evaluationList;
     private List<DataBaseV2> dataBaseList;
     private Map<String, DataBaseV2> comprehensiveMap;
+    private String comment;
 }

@@ -53,7 +53,15 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         titleRun.setFontSize(16);
         titleRun.setText(documentData.getDocument());
 
-        XWPFTable newTable = doc.createTable(3, 2 + instances.size() * 2);
+        int cols = 2 + instances.size() * 2;
+        for (int i = 0; i < instances.size(); i++) {
+            Instance instance = instances.get(i);
+            if ("步道公司".equals(instance.getName())) {
+                cols -= 1;
+            }
+        }
+
+        XWPFTable newTable = doc.createTable(3, cols);
         // merge 1 row and 1, 2 cells 
         newTable.getRow(0).getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
         newTable.getRow(0).getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
@@ -67,10 +75,14 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
             newTable.getRow(0).getCell(2 + i * 2).setText(instance.getName());
             // merge instance name
             newTable.getRow(0).getCell(2 + i * 2).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
-            newTable.getRow(0).getCell(2 + i * 2 + 1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            if (!"步道公司".equals(instance.getName())) {
+                newTable.getRow(0).getCell(2 + i * 2 + 1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
+            }
             // col conetent
             newTable.getRow(1).getCell(2 + i * 2).setText(instance.getCol1());
-            newTable.getRow(1).getCell(2 + i * 2 + 1).setText(instance.getCol2());
+            if (!"步道公司".equals(instance.getName())) {
+                newTable.getRow(1).getCell(2 + i * 2 + 1).setText(instance.getCol2());
+            }
         }
 
         int rowIndex = 1;
@@ -106,6 +118,9 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                         }
                     }
                     // instance1 rank
+                    if (row.getCell(2 + i * 2 + 1) == null) {
+                        continue;
+                    }
                     if (dataBase.getRank() == null || dataBase.getRank().isEmpty() || "null".equals(dataBase.getScore())) {
                         row.getCell(2 + i * 2 + 1).setText("/");
                     } else {

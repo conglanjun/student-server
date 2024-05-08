@@ -3,6 +3,8 @@ package com.clj.student.excelManage;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -576,7 +578,7 @@ public class ExcelTest {
         d1_17.setParentProject("健康步道(含自行车道)");
         d1_17.setProject("运营管理");
         d1_17.setMonth(Month.JANUARY);
-        d1_17.setScore("98");
+        // d1_17.setScore("98");
         d1_17.setAppropriation(1f);
         // FEBRUARY
         DataEntity d2_17 = new DataEntity();
@@ -594,7 +596,7 @@ public class ExcelTest {
         d3_17.setParentProject("健康步道(含自行车道)");
         d3_17.setProject("运营管理");
         d3_17.setMonth(Month.MARCH);
-        d3_17.setScore("100");
+        // d3_17.setScore("100");
         d3_17.setAppropriation(1f);
         // APRIL
         DataEntity d4_17 = new DataEntity();
@@ -605,11 +607,31 @@ public class ExcelTest {
         d4_17.setMonth(Month.APRIL);
         d4_17.setScore("65");
         d4_17.setAppropriation(1f);
+        // MAY
+        DataEntity d5_17 = new DataEntity();
+        d5_17.setTitle("2024年公告服务板块国企化管养成绩汇总表");
+        d5_17.setCompanyName("步道公司");
+        d5_17.setParentProject("健康步道(含自行车道)");
+        d5_17.setProject("运营管理");
+        d5_17.setMonth(Month.MAY);
+        // d4_17.setScore("65");
+        d4_17.setAppropriation(1f);
+        // JUNE
+        DataEntity d6_17 = new DataEntity();
+        d6_17.setTitle("2024年公告服务板块国企化管养成绩汇总表");
+        d6_17.setCompanyName("步道公司");
+        d6_17.setParentProject("健康步道(含自行车道)");
+        d6_17.setProject("运营管理");
+        d6_17.setMonth(Month.JUNE);
+        d6_17.setScore("66");
+        d6_17.setAppropriation(1f);
 
-        dataList17.add(d1_17);
-        dataList17.add(d2_17);
-        dataList17.add(d3_17);
         dataList17.add(d4_17);
+        dataList17.add(d2_17);
+        dataList17.add(d1_17);
+        dataList17.add(d3_17);
+        dataList17.add(d6_17);
+        dataList17.add(d5_17);
 
         List<DataEntity> dataList18 = new ArrayList<>();
         // January
@@ -646,6 +668,7 @@ public class ExcelTest {
         dataList18.add(d3_18);
 
         // 数据集合都加进来
+
         dataCollection.add(dataList1);
         dataCollection.add(dataList2);
         dataCollection.add(dataList3);
@@ -688,11 +711,24 @@ public class ExcelTest {
         int quarterIndex = -1;
         for (int i = 0; i < dataCollection.size(); i++) {
             List<DataEntity> dataList = dataCollection.get(i);
+            if (dataList.size() > 0) {
+                DataEntity data = dataList.get(0);
+                if (data.getParentProject().equals("健康步道(含自行车道)")) {
+                    Collections.sort(dataList, new Comparator<DataEntity>() {
+                        @Override
+                        public int compare(DataEntity o1, DataEntity o2) {
+                            return o1.getMonth().compareTo(o2.getMonth());
+                        }
+                    });
+                } else {
+                    continue;
+                }
+            }
             for (int j = 0; j < dataList.size(); j++) {
                 DataEntity data = dataList.get(j);
                 if (data.getParentProject().equals("健康步道(含自行车道)")) {
                     quarterIndex = i;
-                    if (j % 3 > 0) {
+                    if (j % 3 >= 0 && data.getScore() != null) {
                         dataList.get(j - j % 3).setScore(data.getScore());
                     }
                 }

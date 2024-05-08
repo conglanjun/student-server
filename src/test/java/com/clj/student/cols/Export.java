@@ -142,10 +142,58 @@ public class Export {
         i2.setCol2("相较翔安区平均分");
         i2.setProjectScoreList(projectScoreListB);
 
+        // third
+        List<DataBase> projectScoreListC = new ArrayList<>();
+        DataBase evaluationC1 = new DataBase();
+        evaluationC1.setProjectParent("市容环卫");
+        evaluationC1.setProject("综合成绩");
+        DataBase evaluationC2 = new DataBase();
+        evaluationC2.setProjectParent("市容环卫");
+        evaluationC2.setProject("道路清洗（扫）保洁");
+        DataBase evaluationC3 = new DataBase();
+        evaluationC3.setProjectParent("市容环卫");
+        evaluationC3.setProject("环卫公厕");
+        DataBase evaluationC4 = new DataBase();
+        evaluationC4.setProjectParent("市容环卫");
+        evaluationC4.setProject("道班房");
+        DataBase evaluationC5 = new DataBase();
+        evaluationC5.setProjectParent("背街小巷保洁");
+        evaluationC5.setProject("综合成绩");
+        DataBase evaluationC6 = new DataBase();
+        evaluationC6.setProjectParent("背街小巷保洁");
+        evaluationC6.setProject("红榜数");
+        DataBase evaluationC7 = new DataBase();
+        evaluationC7.setProjectParent("背街小巷保洁");
+        evaluationC7.setProject("黑榜数");
+        DataBase evaluationC8 = new DataBase();
+        evaluationC8.setProjectParent("园林绿化");
+        evaluationC8.setProject("道路绿地");
+        evaluationC8.setScore("91.72");
+        DataBase evaluationC9 = new DataBase();
+        evaluationC9.setProjectParent("园林绿化");
+        evaluationC9.setProject("公园绿地");
+        evaluationC9.setScore("91.13");
+
+        projectScoreListC.add(evaluationC1);
+        projectScoreListC.add(evaluationC2);
+        projectScoreListC.add(evaluationC3);
+        projectScoreListC.add(evaluationC4);
+        projectScoreListC.add(evaluationC5);
+        projectScoreListC.add(evaluationC6);
+        projectScoreListC.add(evaluationC7);
+        projectScoreListC.add(evaluationC8);
+        projectScoreListC.add(evaluationC9);
+
+        Instance i3 = new Instance();
+        i3.setName("步道公司");
+        i3.setCol1("成绩");
+        i3.setProjectScoreList(projectScoreListC);
+
         List<Instance> instances = new ArrayList<>();
 
         instances.add(i1);
         instances.add(i2);
+        instances.add(i3);
 
         DetailData dd = new DetailData();
         dd.setDataBaseList(instances);
