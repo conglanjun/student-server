@@ -578,7 +578,7 @@ public class ExcelTest {
         d1_17.setParentProject("健康步道(含自行车道)");
         d1_17.setProject("运营管理");
         d1_17.setMonth(Month.JANUARY);
-        // d1_17.setScore("98");
+        d1_17.setScore("98");
         d1_17.setAppropriation(1f);
         // FEBRUARY
         DataEntity d2_17 = new DataEntity();
@@ -587,7 +587,7 @@ public class ExcelTest {
         d2_17.setParentProject("健康步道(含自行车道)");
         d2_17.setProject("运营管理");
         d2_17.setMonth(Month.FEBRUARY);
-        d2_17.setScore("99");
+        d2_17.setScore("45");
         d2_17.setAppropriation(1f);
         // MARCH
         DataEntity d3_17 = new DataEntity();
@@ -596,7 +596,7 @@ public class ExcelTest {
         d3_17.setParentProject("健康步道(含自行车道)");
         d3_17.setProject("运营管理");
         d3_17.setMonth(Month.MARCH);
-        // d3_17.setScore("100");
+        d3_17.setScore("991");
         d3_17.setAppropriation(1f);
         // APRIL
         DataEntity d4_17 = new DataEntity();
@@ -605,7 +605,7 @@ public class ExcelTest {
         d4_17.setParentProject("健康步道(含自行车道)");
         d4_17.setProject("运营管理");
         d4_17.setMonth(Month.APRIL);
-        d4_17.setScore("65");
+        d4_17.setScore("33");
         d4_17.setAppropriation(1f);
         // MAY
         DataEntity d5_17 = new DataEntity();
@@ -614,8 +614,8 @@ public class ExcelTest {
         d5_17.setParentProject("健康步道(含自行车道)");
         d5_17.setProject("运营管理");
         d5_17.setMonth(Month.MAY);
-        // d4_17.setScore("65");
-        d4_17.setAppropriation(1f);
+        d5_17.setScore("999");
+        d5_17.setAppropriation(1f);
         // JUNE
         DataEntity d6_17 = new DataEntity();
         d6_17.setTitle("2024年公告服务板块国企化管养成绩汇总表");
@@ -628,9 +628,9 @@ public class ExcelTest {
 
         dataList17.add(d4_17);
         dataList17.add(d2_17);
-        dataList17.add(d1_17);
+        // dataList17.add(d1_17);
         dataList17.add(d3_17);
-        dataList17.add(d6_17);
+        // dataList17.add(d6_17);
         dataList17.add(d5_17);
 
         List<DataEntity> dataList18 = new ArrayList<>();
@@ -717,7 +717,9 @@ public class ExcelTest {
                     Collections.sort(dataList, new Comparator<DataEntity>() {
                         @Override
                         public int compare(DataEntity o1, DataEntity o2) {
-                            return o1.getMonth().compareTo(o2.getMonth());
+                            Month o1Month = Month.valueOf(o1.getMonth().getName().toUpperCase());
+                            Month o2Month = Month.valueOf(o2.getMonth().getName().toUpperCase());
+                            return o1Month.compareTo(o2Month);
                         }
                     });
                 } else {
@@ -728,9 +730,7 @@ public class ExcelTest {
                 DataEntity data = dataList.get(j);
                 if (data.getParentProject().equals("健康步道(含自行车道)")) {
                     quarterIndex = i;
-                    if (j % 3 >= 0 && data.getScore() != null) {
-                        dataList.get(j - j % 3).setScore(data.getScore());
-                    }
+                    break;
                 }
             }
         }
@@ -802,43 +802,53 @@ public class ExcelTest {
                     // fmt.setMaximumIntegerDigits(0);
                     score = data.getScore() + "\n" + "经费" + fmt.format(data.getAppropriation()) + "拨款";
                 }
-                if (data.getMonth().getName().equals("January")) {
-                    excelData.setJanuary(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.FEBRUARY) {
-                    excelData.setFebruary(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.MARCH) {
-                    excelData.setMarch(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.APRIL) {
-                    excelData.setApril(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.MAY) {
-                    excelData.setMay(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.JUNE) {
-                    excelData.setJune(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.JULY) {
-                    excelData.setJuly(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.AUGUST) {
-                    excelData.setAugust(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.SEPTEMBER) {
-                    excelData.setSeptember(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.OCTOBER) {
-                    excelData.setOctober(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.NOVEMBER) {
-                    excelData.setNovember(score);
-                    excelData.setComment(data.getComment());
-                } else if (data.getMonth() == Month.DECEMBER) {
-                    excelData.setDecember(score);
-                    excelData.setComment(data.getComment());
+
+                if (data.getParentProject().equals("健康步道(含自行车道)")) {
+                    if (data.getMonth().getName().equals("January") || data.getMonth().getName().equals("February") || data.getMonth().getName().equals("March")) {
+                        excelData.setJanuary(score);
+                        excelData.setFebruary(score);
+                        excelData.setMarch(score);
+                    } else if (data.getMonth().getName().equals("April") || data.getMonth().getName().equals("May") || data.getMonth().getName().equals("June")) {
+                        excelData.setApril(score);
+                        excelData.setMay(score);
+                        excelData.setJune(score);
+                    } else if (data.getMonth().getName().equals("July") || data.getMonth().getName().equals("August") || data.getMonth().getName().equals("September")) {
+                        excelData.setJuly(score);
+                        excelData.setAugust(score);
+                        excelData.setSeptember(score);
+                    } else if (data.getMonth().getName().equals("October") || data.getMonth().getName().equals("November") || data.getMonth().getName().equals("December")) {
+                        excelData.setOctober(score);
+                        excelData.setNovember(score);
+                        excelData.setDecember(score);
+                    }
+                } else {
+                    if (data.getMonth().getName().equals("January")) {
+                        excelData.setJanuary(score);
+                    } else if (data.getMonth().getName().equals("February")) {
+                        excelData.setFebruary(score);
+                    } else if (data.getMonth().getName().equals("March")) {
+                        excelData.setMarch(score);
+                    } else if (data.getMonth().getName().equals("April")) {
+                        excelData.setApril(score);
+                    } else if (data.getMonth().getName().equals("May")) {
+                        excelData.setMay(score);
+                    } else if (data.getMonth().getName().equals("June")) {
+                        excelData.setJune(score);
+                    } else if (data.getMonth().getName().equals("July")) {
+                        excelData.setJuly(score);
+                    } else if (data.getMonth().getName().equals("August")) {
+                        excelData.setAugust(score);
+                    } else if (data.getMonth().getName().equals("September")) {
+                        excelData.setSeptember(score);
+                    } else if (data.getMonth().getName().equals("October")) {
+                        excelData.setOctober(score);
+                    } else if (data.getMonth().getName().equals("November")) {
+                        excelData.setNovember(score);
+                    } else if (data.getMonth().getName().equals("December")) {
+                        excelData.setDecember(score);
+                    }
                 }
+                excelData.setComment(data.getComment());
             }
             datas.add(excelData);
         }

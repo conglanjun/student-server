@@ -72,30 +72,30 @@ public class MergeStrategy extends AbstractMergeStrategy {
 
     public void mergeHandle(Sheet sheet, Cell cell, Map<String, List<Integer>> col, int colIndex) {
         Cell prCell = sheet.getRow(cell.getRowIndex() - 1).getCell(cell.getColumnIndex());
-            int firstRow = prCell.getRowIndex();
-            int lastRow = cell.getRowIndex();
-            if (prCell.getStringCellValue().equals(cell.getStringCellValue())) {
-                List<Integer> indexes = new ArrayList<>();
-                if (col0.containsKey(prCell.getStringCellValue())) {
-                    indexes.add(col0.get(prCell.getStringCellValue()).get(0));
-                } else {
-                    indexes.add(firstRow);
-                }
-                indexes.add(lastRow);
-                col0.put(prCell.getStringCellValue(), indexes);
+        int firstRow = prCell.getRowIndex();
+        int lastRow = cell.getRowIndex();
+        if (prCell.getStringCellValue().equals(cell.getStringCellValue())) {
+            List<Integer> indexes = new ArrayList<>();
+            if (col0.containsKey(prCell.getStringCellValue())) {
+                indexes.add(col0.get(prCell.getStringCellValue()).get(0));
             } else {
-                if (col0.containsKey(prCell.getStringCellValue())) {
-                    sheet.addMergedRegion(new CellRangeAddress(col0.get(prCell.getStringCellValue()).get(0), col0.get(prCell.getStringCellValue()).get(1), colIndex, colIndex));
-                    col0.remove(prCell.getStringCellValue());
-                }
+                indexes.add(firstRow);
             }
-            int currentRowIndex = cell.getRowIndex();
-            if (currentRowIndex == this.lastRowIndex) {
-                if (col0.containsKey(prCell.getStringCellValue())) {
-                    sheet.addMergedRegion(new CellRangeAddress(col0.get(prCell.getStringCellValue()).get(0), col0.get(prCell.getStringCellValue()).get(1), colIndex, colIndex));
-                    col0.remove(prCell.getStringCellValue());
-                }
+            indexes.add(lastRow);
+            col0.put(prCell.getStringCellValue(), indexes);
+        } else {
+            if (col0.containsKey(prCell.getStringCellValue())) {
+                sheet.addMergedRegion(new CellRangeAddress(col0.get(prCell.getStringCellValue()).get(0), col0.get(prCell.getStringCellValue()).get(1), colIndex, colIndex));
+                col0.remove(prCell.getStringCellValue());
             }
+        }
+        int currentRowIndex = cell.getRowIndex();
+        if (currentRowIndex == this.lastRowIndex) {
+            if (col0.containsKey(prCell.getStringCellValue())) {
+                sheet.addMergedRegion(new CellRangeAddress(col0.get(prCell.getStringCellValue()).get(0), col0.get(prCell.getStringCellValue()).get(1), colIndex, colIndex));
+                col0.remove(prCell.getStringCellValue());
+            }
+        }
     }
 
     @Override

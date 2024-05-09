@@ -3,7 +3,6 @@ package com.clj.student.cols;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -174,13 +173,13 @@ public class Export {
         evaluationC9.setProject("公园绿地");
         evaluationC9.setScore("91.13");
 
-        projectScoreListC.add(evaluationC1);
-        projectScoreListC.add(evaluationC2);
-        projectScoreListC.add(evaluationC3);
-        projectScoreListC.add(evaluationC4);
-        projectScoreListC.add(evaluationC5);
-        projectScoreListC.add(evaluationC6);
-        projectScoreListC.add(evaluationC7);
+        // projectScoreListC.add(evaluationC1);
+        // projectScoreListC.add(evaluationC2);
+        // projectScoreListC.add(evaluationC3);
+        // projectScoreListC.add(evaluationC4);
+        // projectScoreListC.add(evaluationC5);
+        // projectScoreListC.add(evaluationC6);
+        // projectScoreListC.add(evaluationC7);
         projectScoreListC.add(evaluationC8);
         projectScoreListC.add(evaluationC9);
 

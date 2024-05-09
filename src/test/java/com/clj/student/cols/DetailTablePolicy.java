@@ -14,6 +14,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
@@ -50,7 +51,8 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         titleParagraph.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun titleRun = titleParagraph.createRun();
         titleRun.setBold(true);
-        titleRun.setFontSize(16);
+        titleRun.setFontFamily("创艺简标宋");
+        titleRun.setFontSize(20);
         titleRun.setText(documentData.getDocument());
 
         int cols = 2 + instances.size() * 2;
@@ -68,8 +70,14 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         // 2 row
         newTable.getRow(1).getCell(0).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.RESTART);
         newTable.getRow(1).getCell(1).getCTTc().addNewTcPr().addNewHMerge().setVal(STMerge.CONTINUE);
-        newTable.getRow(0).getCell(0).setText("考评专项");
+
         TableTools.mergeCellsVertically(newTable, 0, 0, 1);
+        newTable.getRow(0).getCell(0).setText("考评专项");
+        // header style
+        XWPFParagraph headerParagraph = newTable.getRow(0).getCell(0).getParagraphs().get(0);
+        XWPFRun headerRun = headerParagraph.createRun();
+        headerRun.setFontFamily("仿宋_GB2312");
+        headerRun.setFontSize(14);
         for (int i = 0; i < instances.size(); i++) {
             Instance instance = instances.get(i);
             newTable.getRow(0).getCell(2 + i * 2).setText(instance.getName());
@@ -84,6 +92,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 newTable.getRow(1).getCell(2 + i * 2 + 1).setText(instance.getCol2());
             }
         }
+
 
         int rowIndex = 1;
         for (String key: rowInstanceData.keySet()) {
@@ -173,12 +182,21 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         commentRun.setText(documentData.getComment());
 
         // style
+        int rowInd = 0;
         for(XWPFTableRow row : newTable.getRows()) {
             for (XWPFTableCell cell: row.getTableCells()) {
-                cell.setVerticalAlignment(XWPFVertAlign.CENTER);
-                XWPFParagraph cellPara = cell.getParagraphs().get(0);
-                cellPara.setAlignment(ParagraphAlignment.CENTER);
+                if (rowInd < 2) {
+                    cell.setVerticalAlignment(XWPFVertAlign.CENTER);
+                    XWPFParagraph cellPara = cell.getParagraphs().get(0);
+                    cellPara.setAlignment(ParagraphAlignment.CENTER);
+                    CTP ctp = cell.getCTTc().sizeOfPArray() == 0? cell.getCTTc().addNewP() : cell.getCTTc().getPArray(0);
+                    XWPFParagraph para = cell.getParagraph(ctp);
+                    XWPFRun run = para.getRuns().size() == 0 ? para.createRun() : para.getRuns().get(0);
+                    run.setFontFamily("仿宋_GB2312");
+                    run.setFontSize(14);
+                }
             }
+            rowInd++;
         }
 
     }
