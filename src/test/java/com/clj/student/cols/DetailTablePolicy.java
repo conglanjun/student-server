@@ -14,9 +14,11 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
@@ -182,21 +184,65 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         commentRun.setText(documentData.getComment());
 
         // style
-        int rowInd = 0;
-        for(XWPFTableRow row : newTable.getRows()) {
-            for (XWPFTableCell cell: row.getTableCells()) {
-                if (rowInd < 2) {
-                    cell.setVerticalAlignment(XWPFVertAlign.CENTER);
-                    XWPFParagraph cellPara = cell.getParagraphs().get(0);
-                    cellPara.setAlignment(ParagraphAlignment.CENTER);
+        for(int j = 0; j < newTable.getRows().size(); j++) {
+            XWPFTableRow row = newTable.getRows().get(j);
+            for (int i = 0; i < row.getTableCells().size(); i++) {
+                XWPFTableCell cell = row.getCell(i);
+                if (j == 0) {
+                    if (i == 0) {
+                        cell.setWidth("136"); // 136 + 85
+                    } else if (i == 1) {
+                        cell.setWidth("85");
+                    } else if (i == 2) {
+                        cell.setWidth("78");
+                    } else if (i == 3) {
+                        if (instances.size() == 2) {
+                            cell.setWidth("110"); // 188 - 78
+                        } else if (instances.size() == 3) {
+                            cell.setWidth("78"); // 156 - 78
+                        }
+                    } else if (i == 4) {
+                        if (instances.size() == 2) {
+                            cell.setWidth("80");
+                        } else if (instances.size() == 3) {
+                            cell.setWidth("78"); // 156 - 78
+                        }
+                    }  else if (i == 5) {
+                        if (instances.size() == 3) {
+                            cell.setWidth("78"); // 156 - 78
+                        }
+                    } else if (i == 6) {
+                        cell.setWidth("80");
+                    }
+                }
+                cell.setVerticalAlignment(XWPFVertAlign.CENTER);
+                XWPFParagraph cellPara = cell.getParagraphs().get(0);
+                cellPara.setAlignment(ParagraphAlignment.CENTER);
+                if (j < 2) {
                     CTP ctp = cell.getCTTc().sizeOfPArray() == 0? cell.getCTTc().addNewP() : cell.getCTTc().getPArray(0);
                     XWPFParagraph para = cell.getParagraph(ctp);
                     XWPFRun run = para.getRuns().size() == 0 ? para.createRun() : para.getRuns().get(0);
                     run.setFontFamily("仿宋_GB2312");
                     run.setFontSize(14);
+                } else {
+                    
                 }
             }
-            rowInd++;
+
+            CTTrPr trPr = row.getCtRow().addNewTrPr();
+            CTHeight ht = trPr.addNewTrHeight();
+            if (j == 0) {
+                if (instances.size() == 2) {
+                    ht.setVal(BigInteger.valueOf(76));
+                } else {
+                    ht.setVal(BigInteger.valueOf(78));
+                }
+            } else if (j == 1) {
+                ht.setVal(BigInteger.valueOf(48));
+            } else {
+                ht.setVal(BigInteger.valueOf(42));
+            }
+            
         }
 
     }

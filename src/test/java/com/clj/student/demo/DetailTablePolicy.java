@@ -21,7 +21,17 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
     @Override
     public void render(XWPFTable table, Object o) throws Exception {
         DetailData detailTable = (DetailData)o;
-        List<DataBaseV2> dataBaseList = detailTable.getDataBaseList();
+        List<DataBaseV2> dataBaseListOrigin = detailTable.getDataBaseList();
+        List<DataBaseV2> dataBaseList = new ArrayList<>();
+        // filter
+        for (int i = 0; i < dataBaseListOrigin.size(); i++) {
+            DataBaseV2 dataBaseV2 = dataBaseListOrigin.get(i);
+            if (dataBaseV2.getSingleItemScore() == 0 && (dataBaseV2.getSingleItemRanking() == null || dataBaseV2.getSingleItemRanking().isEmpty()) && 
+            dataBaseV2.getComprehensiveScore() == 0 && (dataBaseV2.getComprehensiveRanking() == null || dataBaseV2.getComprehensiveRanking().isEmpty())) {
+                continue;
+            }
+            dataBaseList.add(dataBaseV2);
+        }
         String comment = detailTable.getComment();
         if (dataBaseList != null) {
             int rowIndex = 0;

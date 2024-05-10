@@ -192,7 +192,7 @@ public class Export {
 
         instances.add(i1);
         instances.add(i2);
-        instances.add(i3);
+        // instances.add(i3);
 
         DetailData dd = new DetailData();
         dd.setDataBaseList(instances);
