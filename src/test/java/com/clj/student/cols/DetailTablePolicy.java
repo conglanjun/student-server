@@ -76,10 +76,10 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         TableTools.mergeCellsVertically(newTable, 0, 0, 1);
         newTable.getRow(0).getCell(0).setText("考评专项");
         // header style
-        XWPFParagraph headerParagraph = newTable.getRow(0).getCell(0).getParagraphs().get(0);
-        XWPFRun headerRun = headerParagraph.createRun();
-        headerRun.setFontFamily("仿宋_GB2312");
-        headerRun.setFontSize(14);
+        // XWPFParagraph headerParagraph = newTable.getRow(0).getCell(0).getParagraphs().get(0);
+        // XWPFRun headerRun = headerParagraph.createRun();
+        // headerRun.setFontFamily("仿宋_GB2312");
+        // headerRun.setFontSize(14);
         for (int i = 0; i < instances.size(); i++) {
             Instance instance = instances.get(i);
             newTable.getRow(0).getCell(2 + i * 2).setText(instance.getName());
@@ -218,12 +218,13 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
                 XWPFParagraph cellPara = cell.getParagraphs().get(0);
                 cellPara.setAlignment(ParagraphAlignment.CENTER);
+
+                CTP ctp = cell.getCTTc().sizeOfPArray() == 0? cell.getCTTc().addNewP() : cell.getCTTc().getPArray(0);
+                XWPFParagraph para = cell.getParagraph(ctp);
+                XWPFRun run = para.getRuns().size() == 0 ? para.createRun() : para.getRuns().get(0);
+                run.setFontFamily("仿宋_GB2312");
                 if (j < 2) {
-                    CTP ctp = cell.getCTTc().sizeOfPArray() == 0? cell.getCTTc().addNewP() : cell.getCTTc().getPArray(0);
-                    XWPFParagraph para = cell.getParagraph(ctp);
-                    XWPFRun run = para.getRuns().size() == 0 ? para.createRun() : para.getRuns().get(0);
-                    run.setFontFamily("仿宋_GB2312");
-                    run.setFontSize(14);
+                    run.setFontSize(15);
                 } else {
                     
                 }

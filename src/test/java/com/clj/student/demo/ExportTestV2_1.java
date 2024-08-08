@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @SpringBootTest(classes = ExportTestV2.class)
-public class ExportTestV2 {
+public class ExportTestV2_1 {
 
     DocumentData documentData = new DocumentData();
 
@@ -89,7 +89,21 @@ public class ExportTestV2 {
                     dataBaseV2.setComprehensiveMergeEnd(String.valueOf(dataBaseList.size()));
                     data1.setComprehensiveScore(dataBaseV2.getSingleItemScore());
                     data1.setComprehensiveRanking(dataBaseV2.getSingleItemRanking());
+                    if (dataBaseV2.getComprehensiveProject() == "minProject") {
+                        DataBaseV2 db = comprehensiveMap.get(dataBaseV2.getProjectParent());
+                        dataBaseV2.setComprehensiveScoreV2(db.getSingleItemScore());
+                        dataBaseV2.setComprehensiveRankingV2(db.getSingleItemRanking());
+                        data1.setComprehensiveScoreV2(db.getSingleItemScore());
+                        data1.setComprehensiveRankingV2(db.getSingleItemRanking());
+                    }
                     dataBaseList.add(data1);
+                }
+            }
+            for(String key: comprehensiveMap.keySet()) {
+                DataBaseV2 dataBaseV2 = comprehensiveMap.get(key);
+                if (dataBaseV2.getComprehensiveProject() == "minProject") {
+                    DataBaseV2 db = comprehensiveMap.get(dataBaseV2.getProjectParent());
+                    db.setComprehensiveMergeStart(dataBaseV2.getComprehensiveMergeStart());
                 }
             }
         } catch (ParseException e) {
@@ -102,13 +116,14 @@ public class ExportTestV2 {
         dd.setComprehensiveMap(comprehensiveMap);
         dd.setDataBaseList(dataBaseList);
         documentData.setDetailTable(dd);
+        documentData.setComment("测试备注内容。");
 
     }
 
     @Test
-    public void exportV2() throws IOException {
-        Configure config = Configure.builder().bind("detail_table", new DetailTablePolicy()).build();
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template_v2.docx", config).render(documentData);
-        template.writeToFile("out_example_v2.docx");
+    public void exportV2_1() throws IOException {
+        Configure config = Configure.builder().bind("detail_table", new DetailTablePolicy2_1()).build();
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template_v2_1.docx", config).render(documentData);
+        template.writeToFile("out_example_v2_1.docx");
     }
 }

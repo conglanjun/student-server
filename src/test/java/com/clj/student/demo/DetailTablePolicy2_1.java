@@ -17,14 +17,17 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DetailTablePolicy extends DynamicTableRenderPolicy {
+public class DetailTablePolicy2_1 extends DynamicTableRenderPolicy {
 
     int tableColumnCount = 6;
     int tableDataRows = 2;
@@ -54,7 +57,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
             }
             dataBaseList.add(dataBaseV2);
         }
-        String comment = detailTable.getComment();
+        // String comment = detailTable.getComment();
         if (dataBaseList != null) {
             int rowIndex = 0;
             for (int i = dataBaseList.size() - 1; i >= 0; i--) {
@@ -64,9 +67,9 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 }
                 rowIndex++;
             }
-            if (comment != null && rowIndex > 0) {
-                TableTools.mergeCellsVertically(table, tableColumnCount - 1,  tableDataRows,  tableDataRows + rowIndex);
-            }
+            // if (comment != null && rowIndex > 0) {
+                // TableTools.mergeCellsVertically(table, tableColumnCount - 1,  tableDataRows,  tableDataRows + rowIndex);
+            // }
             for (int i = dataBaseList.size() - 1; i >= 0; i--) {
                 DataBaseV2 dataBase = dataBaseList.get(i);
                 List<String> params = new ArrayList<>();
@@ -77,6 +80,9 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 // parent project; project; mini project
                 if (dataBase.getProjectParent().equals(dataBase.getProject())) {
                     params.add(dataBase.getProject());
+                    // version 2_1 move 市容环卫 score to singleScore's column
+                    // merge single item score two columes to one column
+                    TableTools.mergeCellsHorizonal(table, tableDataRows + i, 3, 4);
                     if (dataBase.getMinProject() == null || dataBase.getMinProject().isEmpty()) {
                         TableTools.mergeCellsHorizonal(table, tableDataRows + i, 0, 2);
                     } else {
@@ -87,9 +93,13 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                     params.add(dataBase.getProjectParent());
                     params.add(dataBase.getProject());
                     if (dataBase.getMinProject() == null || dataBase.getMinProject().isEmpty()) {
+                        TableTools.mergeCellsHorizonal(table, tableDataRows + i, 3, 4);
                         TableTools.mergeCellsHorizonal(table, tableDataRows + i, 1, 2);
                     } else {
                         params.add(dataBase.getMinProject());
+                        if (!dataBase.getProject().startsWith("市容环卫")) {
+                            TableTools.mergeCellsHorizonal(table, tableDataRows + i, 3, 4);
+                        }
                     }
                 }
                 // single
@@ -119,9 +129,26 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                     comprehensiveResult += "\n" + dataBase.getComprehensiveRanking();
                 }
                 params.add(comprehensiveResult);
-                if (comment != null) {
-                    params.add(comment);
+                // if (comment != null) {
+                //     params.add(comment);
+                // }
+                
+                // add zhcj
+                if (dataBase.getProject().startsWith("市容环卫")) {
+                    String comprehensiveResultV2 = "";
+                    if (dataBase.getComprehensiveScoreV2() == 0) {
+                        comprehensiveResultV2 += "-";
+                    } else {
+                        comprehensiveResultV2 += dataBase.getComprehensiveScoreV2();
+                    }
+                    if (dataBase.getComprehensiveRankingV2() == null || dataBase.getComprehensiveRankingV2().isEmpty()) {
+                        comprehensiveResultV2 += "\n/";
+                    } else {
+                        comprehensiveResultV2 += "\n" + dataBase.getComprehensiveRankingV2();
+                    }
+                    params.add(comprehensiveResultV2);
                 }
+
                 RowRenderData rowRenderData = Rows.of(params.toArray(new String[0])).create();
 
                 TableRenderPolicy.Helper.renderRow(table.getRow(tableDataRows + i), rowRenderData);
@@ -184,7 +211,11 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 if (start >= end) {
                     continue;
                 }
-                TableTools.mergeCellsVertically(table, table.getRow(start + tableDataRows).getTableCells().size() - 2, start + tableDataRows, end + tableDataRows);
+                if (dataBaseV2.getComprehensiveProject() == "minProject") {
+                    mergeFunc(table, table.getRow(start + tableDataRows).getTableCells().size() - 2, start + tableDataRows, end + tableDataRows);
+                } else {
+                    mergeFuncFromLast(table, 1, start + tableDataRows, end + tableDataRows);
+                }
             }
         }
 
@@ -200,62 +231,57 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
 
         for(int j = 0; j < table.getRows().size(); j++) {
             XWPFTableRow row = table.getRows().get(j);
+            int currentMaxColSize = row.getTableCells().size();
             for (int i = 0; i < row.getTableCells().size(); i++) {
                 XWPFTableCell cell = row.getCell(i);
                 if (j == 0) { // first row
                     if (i == 0) { // first column
-                        // cell.setWidth("182"); // 182
+                        cell.setWidth("182"); // 182
                     } else if (i == 1) { // second column
-                        // cell.setWidth("332");
+                        cell.setWidth("332");
                     }
                 } else if (j == 1) { // second row
-                    // if (i == 0) { // first column
-                    //     cell.setWidth("182"); // 182
-                    // } else if (i == 1) { // second column
-                    //     cell.setWidth("192");
-                    // } else if (i == 2) { // third column
-                    //     cell.setWidth("140");
-                    // } else if (i == 3) { // comment
-                    //     // cell.setWidth("140");
-                    // }
+                    if (i == 0) { // first column
+                        cell.setWidth("182"); // 182
+                    } else if (i == 1) { // second column
+                        cell.setWidth("192");
+                    } else if (i == 2) { // third column
+                        cell.setWidth("140");
+                    }
                 } else if (j > 1) {
                     // int cellSize = row.getTableCells().size();
-                    if (maxColSize == 4) {
+                    if (currentMaxColSize == 3) {
                         if (i == 0) {
                             cell.setWidth("182");
                         } else if (i == 1) { // second column
                             cell.setWidth("192");
                         } else if (i == 2) { // third column
                             cell.setWidth("140");
-                        } else if (i == 3) { // comment
-                            // cell.setWidth("140");
                         }
-                    } else if (maxColSize == 5) {
+                    } else if (currentMaxColSize == 4) {
                         if (i == 0) {
-                            cell.setWidth("60");
+                            cell.setWidth("80");
                         } else if (i == 1) {
-                            cell.setWidth("122");
+                            cell.setWidth("102");
                         } else if (i == 2) { // second column
                             cell.setWidth("192");
                         } else if (i == 3) { // third column
                             cell.setWidth("140");
-                        } else if (i == 4) { // comment
-                            // cell.setWidth("140");
                         }
-                    } else if (maxColSize == 6) {
-                        if (i == 0) {
-                            cell.setWidth("60");
-                        } else if (i == 1) {
-                            cell.setWidth("60");
-                        } else if (i == 2) {
-                            cell.setWidth("62");
-                        } else if (i == 3) { // second column
-                            cell.setWidth("192");
-                        } else if (i == 4) { // third column
-                            cell.setWidth("140");
-                        } else if (i == 5) { // comment
-                            // cell.setWidth("140");
-                        }
+                    } else if (currentMaxColSize == 6) {
+                        // if (i == 0) {
+                        //     cell.setWidth("60");
+                        // } else if (i == 1) {
+                        //     cell.setWidth("60");
+                        // } else if (i == 2) {
+                        //     cell.setWidth("62");
+                        // } else if (i == 3) { // second column
+                        //     cell.setWidth("92");
+                        // } else if (i == 4) { // third column
+                        //     cell.setWidth("100");
+                        // } else if (i == 5) { // zhcj
+                        //     cell.setWidth("140");
+                        // }
                     }
                 }
                 cell.setVerticalAlignment(XWPFVertAlign.CENTER);
@@ -290,5 +316,41 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
             }
             
         }
+    }
+
+    public void mergeFunc(XWPFTable table, int col, int fromRow, int toRow) {
+        for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
+            XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
+            CTTcPr tcPr = getTcPr(cell);
+            CTVMerge vMerge = tcPr.addNewVMerge();
+            if (rowIndex == fromRow) {
+                // The first merged cell is set with RESTART merge value
+                vMerge.setVal(STMerge.RESTART);
+            } else {
+                // Cells which join (merge) the first one, are set with CONTINUE
+                vMerge.setVal(STMerge.CONTINUE);
+            }
+        }
+    }
+
+    public void mergeFuncFromLast(XWPFTable table, int col, int fromRow, int toRow) {
+        for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
+            int cellSize = table.getRow(rowIndex).getTableCells().size();
+            XWPFTableCell cell = table.getRow(rowIndex).getCell(cellSize - col);
+            CTTcPr tcPr = getTcPr(cell);
+            CTVMerge vMerge = tcPr.addNewVMerge();
+            if (rowIndex == fromRow) {
+                // The first merged cell is set with RESTART merge value
+                vMerge.setVal(STMerge.RESTART);
+            } else {
+                // Cells which join (merge) the first one, are set with CONTINUE
+                vMerge.setVal(STMerge.CONTINUE);
+            }
+        }
+    }
+
+    public CTTcPr getTcPr(XWPFTableCell cell) {
+        CTTcPr tcPr = cell.getCTTc().isSetTcPr() ? cell.getCTTc().getTcPr() : cell.getCTTc().addNewTcPr();
+        return tcPr;
     }
 }

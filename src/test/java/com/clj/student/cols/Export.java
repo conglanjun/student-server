@@ -242,7 +242,7 @@ public class Export {
     
     @Test
     public void export() throws IOException {
-        Configure config = Configure.builder().bind("document_data", new DetailTablePolicy()).build();
+        Configure config = Configure.builder().bind("document_data", new DetailTablePolicyTwo()).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template_env.docx", config).render(fileData);
         template.writeToFile("out_example_env.docx");
     }

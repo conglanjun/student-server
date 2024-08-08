@@ -8,4 +8,6 @@ public class DocumentData {
     private String document;
     @Name("detail_table")
     private DetailData detailTable;
+    @Name("remak")
+    private String comment;
 }

@@ -67,6 +67,7 @@ public class CellStyleWriter extends AbstractCellStyleStrategy {
                 contentWriteCellStyleList.get(context.getRelativeRowIndex() % contentWriteCellStyleList.size()),
                 cellData.getOrCreateStyle());
         }
+        // context.getRow().setHeight(0);
 
         // 经费 拨款 红色
         // if (context.getColumnIndex() > 2 && context.getRowIndex() > 3) {
