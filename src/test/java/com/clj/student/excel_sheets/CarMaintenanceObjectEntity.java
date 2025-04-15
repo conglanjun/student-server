@@ -15,7 +15,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class DataEntity {
+public class CarMaintenanceObjectEntity {
+
+    private Long id;
     
     @ExcelIgnore
     private String contractObjectCode; // 合同标的编码
@@ -90,7 +92,7 @@ public class DataEntity {
     private String orderNo; // 维保单号
 
     @ExcelIgnore
-    private Boolean isBase; // 是否基础信息
+    private Integer isBase; // 是否基础信息
 
     @ExcelIgnore
     private String createUserCn; // 创建人名字
@@ -104,6 +106,6 @@ public class DataEntity {
 
 @Data
 class ScoreLevelExcelData {
-    Map<Integer, List<DataEntity>> dataMap;
-    List<DataEntity> heads;
+    Map<Integer, List<CarMaintenanceObjectEntity>> dataMap;
+    List<CarMaintenanceObjectEntity> heads;
 }
